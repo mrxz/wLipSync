@@ -1,1 +1,2 @@
 # wLipSync
+This is a port of the [uLipSync](https://github.com/hecomi/uLipSync) project for use on the web through WASM. Because it implements the same algorithm in the same way, the profiles made for/with uLipSync are compatible with wLipSync.
