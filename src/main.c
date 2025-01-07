@@ -28,9 +28,10 @@ float execute() {
 	float buffer[3] = {0.1f, 0.3f, 10.0f};
 
 	int outputSampleRate = 48000; // Based on actual output
-	int targetSampleRate = 100; // Depends on profile
+	int targetSampleRate = 48000; // Depends on profile
 	int cutoff = targetSampleRate / 2;
 	int range = 500;
+	int melFilterBankChannels = 10; // Depends on profile
 
 	// CopyRingBuffer(input, out var buffer, startIndex);
 
@@ -54,12 +55,28 @@ float execute() {
 	}
 
 	// PreEmphasis(ref data, 0.97f);
-	// HammingWindow(ref data);
-	// Normalize(ref data, 1f);
-	// FFT(data, out var spectrum);
-	// MelFilterBank(spectrum, out var melSpectrum, targetSampleRate, melFilterBankChannels);
-	// PowerToDb(ref melSpectrum);
-	// DCT(melSpectrum, out var melCepstrum);
+	pre_emphasis(data, data_size, 0.97f);
 
-	return 1;
+	// HammingWindow(ref data);
+	hamming_window(data, data_size);
+
+	// Normalize(ref data, 1f);
+	normalize(data, data_size, 1.f);
+
+	// FFT(data, out var spectrum);
+	float spectrum[data_size];
+	fft(data, spectrum, data_size);
+
+	// MelFilterBank(spectrum, out var melSpectrum, targetSampleRate, melFilterBankChannels);
+	float melSpectrum[melFilterBankChannels];
+	mel_filter_bank(spectrum, data_size, melSpectrum, targetSampleRate, melFilterBankChannels);
+
+	// PowerToDb(ref melSpectrum);
+	power_to_db(melSpectrum, melFilterBankChannels);
+
+	// DCT(melSpectrum, out var melCepstrum);
+	float melCepstrum[melFilterBankChannels];
+	dct(melSpectrum, melCepstrum, melFilterBankChannels);
+
+	return melSpectrum[10];
 }
