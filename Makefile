@@ -2,12 +2,14 @@ CC=clang
 CFLAGS=-I/usr/include/
 ODIR=obj
 
-_OBJ = main.o
+SRC_FILES = $(wildcard src/*.c) $(wildcard src/**/*.c)
+_OBJ = $(patsubst src/%.c,%.o,$(SRC_FILES))
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 all: make_dirs wlipsync.wasm
 
 $(ODIR)/%.o: src/%.c src/wasm.h
+	mkdir -p $(@D)
 	$(CC) --target=wasm32 -nostdlib -O3 $(CFLAGS) -o $@ -c $<
 
 wlipsync.wasm: $(OBJ)

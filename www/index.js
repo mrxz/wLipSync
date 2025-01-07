@@ -19,3 +19,4 @@ const importObject = {
 const wasmProgram = await WebAssembly.instantiateStreaming(fetch("wlipsync.wasm"), importObject);
 wasmProgram.instance.exports.main();
 
+console.log(wasmProgram.instance.exports.execute())
