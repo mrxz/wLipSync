@@ -23,15 +23,37 @@ int main() {
   return 0;
 }
 
+// Profile
+struct Profile {
+	int targetSampleRate;
+	int sampleCount;
+	int melFilterBankChannels;
+	int compareMethod;
+	int mfccCount;
+	int mfccDataCount;
+} profile;
+float mfcc[12 * 12];
+
+float* load_profile(int targetSampleRate, int sampleCount, int melFilterBankChannels, int compareMethod, int mfccCount, int mfccDataCount) {
+	profile.targetSampleRate = targetSampleRate;
+	profile.sampleCount = sampleCount;
+	profile.melFilterBankChannels = melFilterBankChannels;
+	profile.compareMethod = compareMethod;
+	profile.mfccCount = mfccCount;
+	profile.mfccDataCount = mfccDataCount;
+
+	return mfcc;
+}
+
 float execute() {
 	int buffer_size = 3;
 	float buffer[3] = {0.1f, 0.3f, 10.0f};
 
 	int outputSampleRate = 48000; // Based on actual output
-	int targetSampleRate = 48000; // Depends on profile
+	int targetSampleRate = profile.targetSampleRate;
 	int cutoff = targetSampleRate / 2;
 	int range = 500;
-	int melFilterBankChannels = 10; // Depends on profile
+	int melFilterBankChannels = profile.melFilterBankChannels;
 
 	// CopyRingBuffer(input, out var buffer, startIndex);
 
@@ -78,5 +100,5 @@ float execute() {
 	float melCepstrum[melFilterBankChannels];
 	dct(melSpectrum, melCepstrum, melFilterBankChannels);
 
-	return melSpectrum[10];
+	return mfcc[0];
 }
