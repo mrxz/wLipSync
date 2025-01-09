@@ -1,8 +1,5 @@
 const memory = new WebAssembly.Memory({ initial: 32 });
 const importObject = {
-    JS: {
-        js_print: function (str, len) {},
-    },
     env: {
         memory: memory
     }
