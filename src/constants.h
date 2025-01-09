@@ -1,0 +1,3 @@
+#define MAX_PHONEMES 12
+#define MAX_MFCC_SAMPLES (MAX_PHONEMES * 12)
+#define MFCC_NUM 12

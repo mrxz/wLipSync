@@ -31,22 +31,23 @@ const mfccPtr = exports.load_profile(
   profileJson.melFilterBankChannels,
   profileJson.compareMethod,
   profileJson.mfccNum,
-  profileJson.mfccDataCount
+  profileJson.mfccDataCount,
+  profileJson.useStandardization ? 1 : 0
 );
 
 const mfccs =  profileJson.mfccs;
-const mfccData = new DataView(memory.buffer, mfccPtr, profileJson.mfccNum * profileJson.mfccDataCount * 4);
-for(let i = 0; i < mfccs.length; i++) {
-  const mfcc = mfccs[i];
-  for(let j = 0; j < profileJson.mfccDataCount; j++) {
-    let sum = 0;
-    for(let x = 0; x < mfcc.mfccCalibrationDataList[j].array.length; x++) {
-      sum += mfcc.mfccCalibrationDataList[j].array[x];
-    }
+const mfccData = new DataView(memory.buffer, mfccPtr, profileJson.mfccNum * profileJson.mfccDataCount * 12 * 4);
 
-    mfccData.setFloat32((i * profileJson.mfccDataCount + j) * 4, sum / mfcc.mfccCalibrationDataList[j].array.length, true);
+let index = 0;
+for(const phoneme of mfccs) {
+  for(const sampleList of phoneme.mfccCalibrationDataList) {
+    for(const sample of sampleList.array) {
+      mfccData.setFloat32(index, sample, true);
+      index += 4;
+    }
   }
 }
-console.log(mfccPtr, mfccData);
+console.log(mfccData);
+exports.precompute_profile();
 
 console.log(wasmProgram.instance.exports.execute())

@@ -8,3 +8,5 @@ void fft(float* data, float* spectrum, unsigned long size);
 void mel_filter_bank(float* spectrum, unsigned long spectrumSize, float* melSpectrum, float sampleRate, int melDiv);
 void power_to_db(float* array, unsigned long size);
 void dct(float* spectrum, float* cepstrum, unsigned long size);
+
+float rms_volume(float* array, unsigned long size);
