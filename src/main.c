@@ -1,4 +1,3 @@
-#include "wasm.h"
 #include "constants.h"
 #include "algo/algo.h"
 #include "score/score.h"

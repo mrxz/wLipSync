@@ -8,9 +8,9 @@ OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 all: make_dirs wlipsync.wasm
 
-$(ODIR)/%.o: src/%.c src/wasm.h
+$(ODIR)/%.o: src/%.c
 	mkdir -p $(@D)
-	$(CC) --target=wasm32 -nostdlib -O3 $(CFLAGS) -o $@ -c $<
+	$(CC) --target=wasm32 -mbulk-memory -nostdlib -O3 $(CFLAGS) -o $@ -c $<
 
 wlipsync.wasm: $(OBJ)
 	wasm-ld --no-entry --export-dynamic --export-all --lto-O3 --import-memory $^ -o www/$@
