@@ -27,10 +27,9 @@ float profileStdDev[MFCC_NUM];
 float mfccOut[MFCC_NUM];
 float scores[MAX_PHONEMES];
 
-float inputBuffer[16384];
-int inputBufferIndex = 1;
+float inputBuffer[INPUT_BUFFER_SIZE] = {0};
 
-float outputSampleRate = 48000;
+int outputSampleRate = 48000;
 int inputSampleCount = 0;
 
 float* load_profile(int targetSampleRate, int sampleCount, int melFilterBankChannels, int compareMethod, int mfccCount, int mfccDataCount, int useStandardization) {
@@ -114,16 +113,15 @@ int execute(int inputBufferIndex) {
   int buffer_size = inputSampleCount;
   float buffer[buffer_size];
 
-  int outputSampleRate = 48000; // Based on actual output
   int targetSampleRate = profile.targetSampleRate;
   int cutoff = targetSampleRate / 2;
   int range = 500;
   int melFilterBankChannels = profile.melFilterBankChannels;
 
-  float volume = rms_volume(buffer, buffer_size);
-
   // CopyRingBuffer(input, out var buffer, startIndex);
-  copy_ring_buffer(buffer, inputBuffer, (inputBufferIndex - buffer_size), INPUT_BUFFER_SIZE, buffer_size);
+  copy_ring_buffer(buffer, inputBuffer, (inputBufferIndex + INPUT_BUFFER_SIZE - buffer_size), INPUT_BUFFER_SIZE, buffer_size);
+
+  float volume = rms_volume(buffer, buffer_size);
 
   // LowPassFilter(ref buffer, outputSampleRate, cutoff, range);
   low_pass_filter(buffer, buffer_size, outputSampleRate, cutoff, range);

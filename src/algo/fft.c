@@ -27,10 +27,10 @@ void fft_impl(float *spectrumRe, float *spectrumIm, unsigned long size) {
     float oi = oddIm[i];
     float theta = -2.f * PT_PI * i / size;
 
-    float cx = PT_cos(theta);
-    float cy = PT_sin(theta);
+    float cx = PT_cosf(theta);
+    float cy = PT_sinf(theta);
     float cx2 = cx * or - cy * oi;
-    float cy2 = cx * oi - cy * or ;
+    float cy2 = cx * oi + cy * or;
 
     spectrumRe[i] = er + cx2;
     spectrumIm[i] = ei + cy2;
@@ -45,6 +45,7 @@ void fft(float *data, float *spectrum, unsigned long size) {
 
   for(int i = 0; i < size; ++i) {
     spectrumRe[i] = data[i];
+    spectrumIm[i] = 0.f;
   }
   fft_impl(spectrumRe, spectrumIm, size);
 

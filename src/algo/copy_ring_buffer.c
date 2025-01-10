@@ -1,8 +1,8 @@
-void copy_ring_buffer(float *buffer, float *inputBuffer,
+void copy_ring_buffer(float *outputBuffer, float *inputBuffer,
                       unsigned long startIndex, unsigned long inputBufferSize,
                       unsigned long outputBufferSize) {
-  startIndex = (startIndex + inputBufferSize) % inputBufferSize;
+  startIndex %= inputBufferSize;
   for(int i = 0; i < outputBufferSize; i++) {
-    buffer[i] = inputBuffer[(startIndex + i) % inputBufferSize];
+    outputBuffer[i] = inputBuffer[(startIndex + i) % inputBufferSize];
   }
 }

@@ -13,7 +13,7 @@ $(ODIR)/%.o: src/%.c src/wasm.h
 	$(CC) --target=wasm32 -nostdlib -O3 $(CFLAGS) -o $@ -c $<
 
 wlipsync.wasm: $(OBJ)
-	wasm-ld --no-entry --export-dynamic --export-all --lto-O3 --allow-undefined-file=wasm-import.syms --import-memory $^ -o www/$@
+	wasm-ld --no-entry --export-dynamic --export-all --lto-O3 --import-memory $^ -o www/$@
 
 .PHONY: clean
 

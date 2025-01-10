@@ -1,5 +1,6 @@
 #include "../constants.h"
 #include "../math.h"
+#define PT_MATH_PRECISE_POW
 #include "../pt_math.h"
 
 void calc_cosine_similarity_scores(float *mfcc, float *profileMfcc,
