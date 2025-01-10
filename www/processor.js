@@ -6,15 +6,13 @@ const importObject = {
 };
 
 class Processor extends AudioWorkletProcessor {
-    constructor() {
+    constructor(options) {
         super();
 
         this.inputBufferIndex = -1;
 
-        // Listen for initialization message
-        this.port.onmessage = async (event) => {
-            const { wasmModule, profile } = event.data;
-            const instance = await WebAssembly.instantiate(wasmModule, importObject);
+        const { wasmModule, profile } = options.processorOptions;
+        WebAssembly.instantiate(wasmModule, importObject).then(instance => {
             const exports = this.exports = instance.exports;
 
             const mfccPtr = exports.load_profile(
@@ -48,7 +46,7 @@ class Processor extends AudioWorkletProcessor {
             this.inputBuffer = new DataView(memory.buffer, this.inputBufferPtr, this.inputBufferSize * 4);
             this.inputBufferIndex = 0;
             this.lastIndex = 0;
-        }
+        });
     }
 
     process([input], [output]) {

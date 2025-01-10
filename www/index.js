@@ -4,13 +4,12 @@ const profileJson = await profile.json();
 
 const audioContext = new AudioContext();
 await audioContext.audioWorklet.addModule('processor.js');
-const processor = new AudioWorkletNode(audioContext, "processor");
-processor.port.postMessage({ wasmModule, profile: profileJson });
-
-const outputEl = document.getElementById('out');
+const processor = new AudioWorkletNode(audioContext, "processor", { processorOptions: { wasmModule, profile: profileJson } });
 processor.port.onmessage = (e) => {
   outputEl.innerHTML = e.data.name;
 }
+
+const outputEl = document.getElementById('out');
 
 window.addEventListener('click', async _ => {
   if (audioContext.state === "suspended") {
@@ -22,5 +21,6 @@ window.addEventListener('click', async _ => {
   });
   const source = audioContext.createMediaStreamSource(stream);
 
-  source.connect(processor);//.connect(audioContext.destination);
+  source.connect(processor)//.connect(audioContext.destination);
 }, { passive: true, once: true })
+
