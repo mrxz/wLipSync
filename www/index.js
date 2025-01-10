@@ -7,6 +7,11 @@ await audioContext.audioWorklet.addModule('processor.js');
 const processor = new AudioWorkletNode(audioContext, "processor");
 processor.port.postMessage({ wasmModule, profile: profileJson });
 
+const outputEl = document.getElementById('out');
+processor.port.onmessage = (e) => {
+  outputEl.innerHTML = e.data.name;
+}
+
 window.addEventListener('click', async _ => {
   if (audioContext.state === "suspended") {
     audioContext.resume();
@@ -17,6 +22,5 @@ window.addEventListener('click', async _ => {
   });
   const source = audioContext.createMediaStreamSource(stream);
 
-  source.connect(processor).connect(audioContext.destination);
-
-}, false)
+  source.connect(processor);//.connect(audioContext.destination);
+}, { passive: true, once: true })

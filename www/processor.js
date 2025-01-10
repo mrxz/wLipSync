@@ -27,7 +27,7 @@ class Processor extends AudioWorkletProcessor {
                 profile.useStandardization ? 1 : 0
             );
 
-            const mfccs = profile.mfccs;
+            const mfccs = this.mfccs = profile.mfccs;
             const mfccData = new DataView(memory.buffer, mfccPtr, profile.mfccNum * profile.mfccDataCount * 12 * 4);
 
             let index = 0;
@@ -39,19 +39,23 @@ class Processor extends AudioWorkletProcessor {
                     }
                 }
             }
-            console.log(mfccData);
+            console.log(mfccData, sampleRate);
             exports.precompute_profile();
-            exports.set_input(48_000); // FIXME: Fetch this from the AudioContext somehow
+            exports.set_input(sampleRate);
 
             this.inputBufferPtr = exports.get_input_buffer();
             this.inputBufferSize = exports.get_input_buffer_size();
             this.inputBuffer = new DataView(memory.buffer, this.inputBufferPtr, this.inputBufferSize * 4);
             this.inputBufferIndex = 0;
+            this.lastIndex = 0;
         }
     }
 
     process([input], [output]) {
         const monoInput = input[0];
+        if (!monoInput) {
+            return true;
+        }
 
         // Pass-through
         for (let channel = 0; channel < output.length; channel++) {
@@ -65,12 +69,15 @@ class Processor extends AudioWorkletProcessor {
 
         // Process quantum
         for(let i = 0; i < monoInput.length; i++) {
-            this.inputBufferIndex = (this.inputBufferIndex + 1) % this.inputBufferSize;
             this.inputBuffer.setFloat32(this.inputBufferIndex * 4, monoInput[i], true);
-        }
+            this.inputBufferIndex = (this.inputBufferIndex + 1) % this.inputBufferSize;
 
-        const index = this.exports.execute(this.inputBufferIndex);
-        console.log(index, this.inputBufferIndex);
+            if((this.inputBufferIndex + this.inputBufferSize - this.lastIndex) % this.inputBufferSize === 735 /*3072*/) {
+                const index = this.exports.execute(this.inputBufferIndex);
+                this.port.postMessage({ index, name: this.mfccs[index].name });
+                this.lastIndex = this.inputBufferIndex;
+            }
+        }
 
         return true;
     }
