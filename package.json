@@ -1,0 +1,21 @@
+{
+  "name": "wlipsync",
+  "module": "www/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "bun run build:wasm && bun run build:www",
+    "build:wasm": "make",
+    "build:www": "vite build",
+    "build:types": "tsc --emitDeclarationOnly --project tsconfig.types.json",
+    "dev": "live-server --port=4000 --no-browser ./example --mount=/js:./dist"
+  },
+  "devDependencies": {
+    "@compodoc/live-server": "^1.2.3",
+    "@types/audioworklet": "^0.0.65",
+    "@types/bun": "latest",
+    "vite": "^6.0.7"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

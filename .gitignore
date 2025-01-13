@@ -1,3 +1,5 @@
 *.wasm
 obj/
 bin/
+node_modules/
+dist/

@@ -6,10 +6,18 @@ const importObject = {
 };
 
 class Processor extends AudioWorkletProcessor {
+    inputBufferIndex = -1;
+    inputBufferPtr = -1;
+    inputBufferSize = -1;
+    inputBuffer = null;
+    lastIndex = 0;
+    volumePtr = -1;
+    volumeView = null;
+    mfccs = [];
+    exports = null;
+
     constructor(options) {
         super();
-
-        this.inputBufferIndex = -1;
 
         const { wasmModule, profile } = options.processorOptions;
         WebAssembly.instantiate(wasmModule, importObject).then(instance => {
@@ -37,7 +45,6 @@ class Processor extends AudioWorkletProcessor {
                     }
                 }
             }
-            console.log(mfccData, sampleRate);
             exports.precompute_profile();
             exports.set_input(sampleRate);
 
@@ -46,6 +53,8 @@ class Processor extends AudioWorkletProcessor {
             this.inputBuffer = new DataView(memory.buffer, this.inputBufferPtr, this.inputBufferSize * 4);
             this.inputBufferIndex = 0;
             this.lastIndex = 0;
+            this.volumePtr = exports.get_volume_ptr();
+            this.volumeView = new DataView(memory.buffer, this.volumePtr, 4);
         });
     }
 
@@ -72,7 +81,9 @@ class Processor extends AudioWorkletProcessor {
 
             if((this.inputBufferIndex + this.inputBufferSize - this.lastIndex) % this.inputBufferSize === 735 /*3072*/) {
                 const index = this.exports.execute(this.inputBufferIndex);
-                this.port.postMessage({ index, name: this.mfccs[index].name });
+                const volume = this.volumeView.getFloat32(0, true);
+
+                this.port.postMessage({ timestamp: currentTime, index, name: this.mfccs[index].name, volume });
                 this.lastIndex = this.inputBufferIndex;
             }
         }
@@ -81,4 +92,4 @@ class Processor extends AudioWorkletProcessor {
     }
 }
 
-registerProcessor("processor", Processor);
+registerProcessor("wlipsync-processor", Processor);

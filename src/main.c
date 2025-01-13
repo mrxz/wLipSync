@@ -28,6 +28,8 @@ float scores[MAX_PHONEMES];
 
 float inputBuffer[INPUT_BUFFER_SIZE] = {0};
 
+float volume = 0.f;
+
 int outputSampleRate = 48000;
 int inputSampleCount = 0;
 
@@ -108,6 +110,10 @@ int get_input_buffer_size() {
 	return INPUT_BUFFER_SIZE;
 }
 
+float* get_volume_ptr() {
+  return &volume;
+}
+
 int execute(int inputBufferIndex) {
   int buffer_size = inputSampleCount;
   float buffer[buffer_size];
@@ -120,7 +126,7 @@ int execute(int inputBufferIndex) {
   // CopyRingBuffer(input, out var buffer, startIndex);
   copy_ring_buffer(buffer, inputBuffer, (inputBufferIndex + INPUT_BUFFER_SIZE - buffer_size), INPUT_BUFFER_SIZE, buffer_size);
 
-  float volume = rms_volume(buffer, buffer_size);
+  volume = rms_volume(buffer, buffer_size);
 
   // LowPassFilter(ref buffer, outputSampleRate, cutoff, range);
   low_pass_filter(buffer, buffer_size, outputSampleRate, cutoff, range);
