@@ -1,30 +1,39 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { VRMLoaderPlugin } from '@pixiv/three-vrm';
 import { createWLipSyncNode } from 'wlipsync';
 
+// Setup Three.js scene
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-camera.position.set(0, 1.65, 0.5);
-const loader = new GLTFLoader();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0, 1.40, 0.5);
+
+const light = new THREE.DirectionalLight('white', 2.5);
+light.position.set(2, 4, 3);
+scene.add(light);
 
 const renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
+document.body.appendChild(renderer.domElement);
 
-const ambientLight = new THREE.AmbientLight('white', 1.0);
-scene.add(ambientLight);
+const resize = () => {
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', () => resize())
+resize();
 
-const gltf = await loader.loadAsync('./6784e76a9d91f0cde7abf269-2.glb')
+// Load avatar model
+const loader = new GLTFLoader();
+loader.register((parser) => {
+  return new VRMLoaderPlugin(parser);
+});
+const gltf = await loader.loadAsync('./sample-avatar.vrm')
+const vrm = gltf.userData.vrm;
 const model = gltf.scene;
 scene.add(model);
 
-const teeth = model.getObjectByName('Wolf3D_Teeth');
-const head = model.getObjectByName('Wolf3D_Head');
-const morphTargetDictionary = head.morphTargetDictionary;
-const morphTargetInfluences = head.morphTargetInfluences;
-teeth.morphTargetInfluences = morphTargetInfluences;
-
-// wLipSync
+// Load wLipSync profile
 const profile = await fetch('./profile.json');
 const profileJson = await profile.json();
 
@@ -32,41 +41,33 @@ const audioContext = new AudioContext();
 const lipsyncNode = await createWLipSyncNode(audioContext, profileJson);
 
 renderer.setAnimationLoop(() => {
-  // Update blend shapes
-  const maxBlendShapeValue = 1.0;
-  const bsMaxWeight = 1.0;
-
-  for(const key in morphTargetDictionary) {
-    morphTargetInfluences[morphTargetDictionary[key]] = 0.0;
-  }
-
   for(const key in lipsyncNode.weights) {
-    const weight = lipsyncNode.weights[key] * bsMaxWeight * lipsyncNode.volume * maxBlendShapeValue
+    const weight = lipsyncNode.weights[key] * lipsyncNode.volume;
 
     switch(key) {
       case 'A':
-        morphTargetInfluences[morphTargetDictionary['viseme_aa']] = weight;
+        vrm.expressionManager.setValue('aa', weight);
         break;
       case 'O':
-        morphTargetInfluences[morphTargetDictionary['viseme_O']] = weight;
+        vrm.expressionManager.setValue('oh', weight);
         break;
       case 'E':
-        morphTargetInfluences[morphTargetDictionary['viseme_E']] = weight;
+        vrm.expressionManager.setValue('ee', weight);
         break;
       case 'U':
-        morphTargetInfluences[morphTargetDictionary['viseme_U']] = weight;
+        vrm.expressionManager.setValue('ou', weight);
         break;
       case 'I':
-        morphTargetInfluences[morphTargetDictionary['viseme_I']] = weight;
-        break;
-      default:
+        vrm.expressionManager.setValue('ih', weight);
         break;
     }
   }
 
+  vrm.update(0.0);
   renderer.render(scene, camera);
 });
 
+// Wait for user interaction before enabling microphone
 window.addEventListener('click', async _ => {
   if (audioContext.state === "suspended") {
     audioContext.resume();

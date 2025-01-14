@@ -8,13 +8,31 @@
         "imports": {
           "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js",
           "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/",
+          "@pixiv/three-vrm": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@3/lib/three-vrm.module.min.js",
           "wlipsync": "./js/wlipsync.js"
         }
       }
     </script>
     <script type="module" src="./index.js"></script>
+    <style>
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #out {
+        position: absolute;
+        width: 300px;
+        height: 6em;
+        left: 1em;
+        top: 1em;
+        padding: 0.5em;
+        color: white;
+      }
+    </style>
   </head>
   <body>
-    <h1 id="out"></h1>
+    <div id="out">Click screen to activate microphone</div>
   </body>
 </html>
