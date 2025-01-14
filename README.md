@@ -12,9 +12,15 @@ A MFCC-based lip sync library for WebAudio using WASM. This is a port of the [uL
 <img alt="A-Painter" target="_blank" src="https://github.com/user-attachments/assets/f615d53b-0e71-497c-8c22-f3f8b7dae19b" width="40%">
 
 # Usage
-Either install the package from [npm](https://www.npmjs.com/package/wlipsync) or load it directly using a script tag:
+Either install the package from [npm](https://www.npmjs.com/package/wlipsync) or load it using import maps:
 ```HTML
-<script src="https://cdn.jsdelivr.net/npm/wlipsync"></script>
+<script type="importmap">
+  {
+    "imports": {
+      "wlipsync": "https://cdn.jsdelivr.net/npm/wlipsync/dist/wlipsync-single.js"
+    }
+  }
+</script>
 ```
 
 The main entrypoint is a single file which has the WASM binary and audio worklet processor code inlined, meaning no further steps are required to initialize the library. See the following code on how to use the library:
