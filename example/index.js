@@ -38,10 +38,12 @@ const profile = await fetch('./profile.json');
 const profileJson = await profile.json();
 
 const audioContext = new AudioContext();
+// Create a wLipSync audio node
 const lipsyncNode = await createWLipSyncNode(audioContext, profileJson);
 
 renderer.setAnimationLoop(() => {
   for(const key in lipsyncNode.weights) {
+    // Apply detected phoneme weights to corresponding expressions (blend shapes)
     const weight = lipsyncNode.weights[key] * lipsyncNode.volume;
 
     switch(key) {
@@ -69,7 +71,7 @@ renderer.setAnimationLoop(() => {
 
 // Wait for user interaction before enabling microphone
 window.addEventListener('click', async _ => {
-  if (audioContext.state === "suspended") {
+  if(audioContext.state === "suspended") {
     audioContext.resume();
   }
 
@@ -77,6 +79,8 @@ window.addEventListener('click', async _ => {
     audio: true,
   });
   const source = audioContext.createMediaStreamSource(stream);
+
+  // Connect the source to the wLipSync audio node.
+  // NOTE: The lipsyncNode should not be connected to anything else.
   source.connect(lipsyncNode)
 }, { passive: true, once: true })
-
