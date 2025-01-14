@@ -58,15 +58,14 @@ class Processor extends AudioWorkletProcessor {
         });
     }
 
-    process([input], [output]) {
-        const monoInput = input[0];
+    static get parameterDescriptors() {
+        return [{ name: "blockSize", defaultValue: 512, minValue: 128, automationRate: "k-rate" }];
+    }
+
+    process(input, output, parameters) {
+        const monoInput = input[0][0];
         if (!monoInput) {
             return true;
-        }
-
-        // Pass-through
-        for (let channel = 0; channel < output.length; channel++) {
-            output[channel].set(input[channel]);
         }
 
         // Populate ring buffer
@@ -79,13 +78,14 @@ class Processor extends AudioWorkletProcessor {
             this.inputBuffer.setFloat32(this.inputBufferIndex * 4, monoInput[i], true);
             this.inputBufferIndex = (this.inputBufferIndex + 1) % this.inputBufferSize;
 
-            if((this.inputBufferIndex + this.inputBufferSize - this.lastIndex) % this.inputBufferSize === 735 /*3072*/) {
-                const index = this.exports.execute(this.inputBufferIndex);
-                const volume = this.volumeView.getFloat32(0, true);
+        }
 
-                this.port.postMessage({ timestamp: currentTime, index, name: this.mfccs[index].name, volume });
-                this.lastIndex = this.inputBufferIndex;
-            }
+        if((this.inputBufferIndex + this.inputBufferSize - this.lastIndex) % this.inputBufferSize === parameters.blockSize[0]) {
+            const index = this.exports.execute(this.inputBufferIndex);
+            const volume = this.volumeView.getFloat32(0, true);
+
+            this.port.postMessage({ timestamp: currentTime, index, name: this.mfccs[index].name, volume });
+            this.lastIndex = this.inputBufferIndex;
         }
 
         return true;

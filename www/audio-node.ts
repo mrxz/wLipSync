@@ -45,4 +45,12 @@ export class WLipSyncAudioNode extends AudioWorkletNode {
             this.weightVelocities[key] = weightVel;
         }
     }
+
+    public get blockSize() {
+        return (this.parameters as Map<string, AudioParam>).get('blockSize')!.value
+    }
+
+    public set blockSize(value: number) {
+        (this.parameters as Map<string, AudioParam>).get('blockSize')!.setValueAtTime(value, this.context.currentTime);
+    }
 }
