@@ -6,13 +6,13 @@ export default defineConfig({
     open: 'example/index.html',
   },
   build: {
+    emptyOutDir: false,
     target: 'esnext',
-    minify: true,
+    minify: 'terser',
     lib: {
-      entry: resolve(__dirname, 'www/index.ts'),
-      fileName: 'wlipsync',
+      entry: resolve(__dirname, 'www/index-single.ts'),
+      fileName: 'wlipsync-single',
       formats: ['es'],
     },
-  },
-  publicDir: 'www/public/'
+  }
 })

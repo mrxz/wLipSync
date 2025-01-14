@@ -1,21 +1,49 @@
 {
   "name": "wlipsync",
-  "module": "www/index.ts",
+  "version": "1.0.0",
+  "description": "MFCC-based lip-sync library using WASM and WebAudio based on uLipSync",
+  "author": "Noeri Huisman",
+  "license": "MIT",
+  "module": "dist/wlipsync.js",
+  "main": "dist/wlipsync.js",
+  "types": "dist/typings/index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "bun run build:wasm && bun run build:www",
+    "build": "bun run build:wasm && bun run build:www-audio-processor && bun run build:www && bun run build:www-single && bun run build:minify && bun run build:types",
     "build:wasm": "make",
     "build:www": "vite build",
+    "build:www-audio-processor": "bun build --minify www/audio-processor.js --outfile www/public/audio-processor.js",
+    "build:www-single": "vite build -c vite-single.config.js",
+    "build:minify": "terser dist/wlipsync.js --module -o dist/wlipsync.js && terser dist/wlipsync-single.js --module -o dist/wlipsync-single.js",
     "build:types": "tsc --emitDeclarationOnly --project tsconfig.types.json",
     "dev": "live-server --port=4000 --no-browser ./example --mount=/js:./dist"
   },
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/wlipsync-single.js"
+    },
+    "./wlipsync.js": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/wlipsync.js"
+    },
+    "./*": {
+      "default": "./dist/*"
+    }
+  },
+  "keywords": [
+    "wasm",
+    "webaudio"
+  ],
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@compodoc/live-server": "^1.2.3",
     "@types/audioworklet": "^0.0.65",
     "@types/bun": "latest",
+    "terser": "^5.37.0",
+    "typescript": "^5.0.0",
     "vite": "^6.0.7"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
   }
 }

@@ -1,6 +1,13 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "declaration": true
-  }
+    "declaration": true,
+    "declarationDir": "dist/typings/",
+    "noEmit": false,
+  },
+  "files": [
+    "www/index.ts",
+    "www/audio-node.ts",
+    "www/types.ts"
+  ]
 }

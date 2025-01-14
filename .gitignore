@@ -3,3 +3,4 @@ obj/
 bin/
 node_modules/
 dist/
+www/public/

@@ -13,7 +13,8 @@ $(ODIR)/%.o: src/%.c
 	$(CC) --target=wasm32 -mbulk-memory -nostdlib -O3 $(CFLAGS) -o $@ -c $<
 
 wlipsync.wasm: $(OBJ)
-	wasm-ld --no-entry --export-dynamic --export-all --lto-O3 --import-memory $^ -o www/$@
+	wasm-ld --no-entry --export-dynamic --export-all --lto-O3 --import-memory $^ -o www/public/$@
+	wasm-opt -O3 www/public/$@ -o www/public/$@
 
 .PHONY: clean
 
@@ -21,4 +22,4 @@ clean:
 	rm -rf $(ODIR) wlipsync.wasm
 
 make_dirs:
-	mkdir -p $(ODIR)
+	mkdir -p $(ODIR) www/public/
