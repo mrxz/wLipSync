@@ -16,7 +16,8 @@
     "build:www-single": "vite build -c vite-single.config.js",
     "build:minify": "terser dist/wlipsync.js --module -o dist/wlipsync.js && terser dist/wlipsync-single.js --module -o dist/wlipsync-single.js",
     "build:types": "tsc --emitDeclarationOnly --project tsconfig.types.json",
-    "dev": "live-server --port=4000 --no-browser ./example --mount=/js:./dist"
+    "dev": "live-server --port=4000 --no-browser ./example --mount=/js:./dist",
+    "benchmark": "bun run benchmark.js"
   },
   "exports": {
     ".": {
@@ -42,6 +43,7 @@
     "@compodoc/live-server": "^1.2.3",
     "@types/audioworklet": "^0.0.65",
     "@types/bun": "latest",
+    "mitata": "^1.0.31",
     "terser": "^5.37.0",
     "typescript": "^5.0.0",
     "vite": "^6.0.7"
