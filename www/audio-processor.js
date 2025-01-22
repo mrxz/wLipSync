@@ -1,4 +1,4 @@
-const memory = new WebAssembly.Memory({ initial: 32 });
+const memory = new WebAssembly.Memory({ initial: 4 });
 const importObject = {
     env: {
         memory: memory

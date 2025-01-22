@@ -3,7 +3,7 @@ import { readFileSync } from 'fs';
 import profile from './example/profile.json' with { type: "json" };
 
 // Load wlipsync.wasm
-const memory = new WebAssembly.Memory({ initial: 32 });
+const memory = new WebAssembly.Memory({ initial: 4 });
 const importObject = { env: { memory: memory } };
 const wasmBuffer = readFileSync('./www/public/wlipsync.wasm');
 const { instance } = await WebAssembly.instantiate(wasmBuffer, importObject);
