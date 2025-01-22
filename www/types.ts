@@ -1,6 +1,9 @@
 export interface ProfileMFCC {
     name: string;
     mfccCalibrationDataList: Array<{ array: number[] }>;
+
+    // Precomputed values
+    values?: Array<number>;
 }
 
 export type Profile = {
@@ -12,6 +15,10 @@ export type Profile = {
     mfccDataCount: number;
     useStandardization: boolean;
     mfccs: Array<ProfileMFCC>;
+
+    // Precomputed values
+    means?: Array<number>;
+    stdDevs?: Array<number>;
 };
 
 export interface WorkletMessage {

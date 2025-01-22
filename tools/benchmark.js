@@ -1,11 +1,11 @@
 import { run, bench } from 'mitata';
 import { readFileSync } from 'fs';
-import profile from './example/profile.json' with { type: "json" };
+import profile from '../example/profile.json' with { type: "json" };
 
 // Load wlipsync.wasm
 const memory = new WebAssembly.Memory({ initial: 4 });
 const importObject = { env: { memory: memory } };
-const wasmBuffer = readFileSync('./www/public/wlipsync.wasm');
+const wasmBuffer = readFileSync(new URL('../www/public/wlipsync.wasm', import.meta.url));
 const { instance } = await WebAssembly.instantiate(wasmBuffer, importObject);
 const exports = instance.exports;
 

@@ -22,6 +22,7 @@ float profileMfccRaw[MAX_MFCC_SAMPLES * MFCC_NUM];
 float profileMfcc[MAX_PHONEMES * MFCC_NUM];
 float profileMeans[MFCC_NUM];
 float profileStdDev[MFCC_NUM];
+float* profilePtrs[3] = {profileMfcc, profileMeans, profileStdDev};
 
 float mfccOut[MFCC_NUM];
 float scores[MAX_PHONEMES];
@@ -94,6 +95,11 @@ void precompute_profile() {
       profileStdDev[i] = 1;
     }
   }
+}
+
+float** get_profile_ptrs() {
+  // Return pointer to a list of pointers to the various computed arrays
+  return profilePtrs;
 }
 
 void set_input(int sampleRate) {

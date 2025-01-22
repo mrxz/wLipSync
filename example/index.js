@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { VRMLoaderPlugin } from '@pixiv/three-vrm';
-import { createWLipSyncNode } from 'wlipsync';
+import { createWLipSyncNode, parseBinaryProfile } from 'wlipsync';
 
 // Setup Three.js scene
 const scene = new THREE.Scene();
@@ -34,8 +34,9 @@ const model = gltf.scene;
 scene.add(model);
 
 // Load wLipSync profile
-const profile = await fetch('./profile.json');
-const profileJson = await profile.json();
+const profile = await fetch('./profile.bin');
+const profileBin = await profile.arrayBuffer();
+const profileJson = parseBinaryProfile(profileBin);
 
 const audioContext = new AudioContext();
 // Create a wLipSync audio node

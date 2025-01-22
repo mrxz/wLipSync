@@ -17,7 +17,8 @@
     "build:minify": "terser dist/wlipsync.js --module -o dist/wlipsync.js && terser dist/wlipsync-single.js --module -o dist/wlipsync-single.js",
     "build:types": "tsc --emitDeclarationOnly --project tsconfig.types.json",
     "dev": "live-server --port=4000 --no-browser ./example --mount=/js:./dist",
-    "benchmark": "bun run benchmark.js"
+    "benchmark": "bun run tools/benchmark.js",
+    "json2bin": "bun run tools/json2bin.js"
   },
   "exports": {
     ".": {
@@ -37,7 +38,8 @@
     "webaudio"
   ],
   "files": [
-    "dist"
+    "dist",
+    "tools/json2bin.js"
   ],
   "devDependencies": {
     "@compodoc/live-server": "^1.2.3",

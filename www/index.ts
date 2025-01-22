@@ -9,4 +9,5 @@ export async function createWLipSyncNode(audioContext: AudioContext, profile: Pr
 }
 
 export type * from './types.js';
+export * from './parse.js';
 export { configuration, WLipSyncAudioNode } from './audio-node.js';
