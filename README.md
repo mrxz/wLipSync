@@ -54,6 +54,31 @@ For a full example using [Three.js](https://threejs.org/) and a VRM avatar, see 
 ## Creating a profile
 A profile is required for **wLipSync** to work. This project does not come with a way to create these. Instead they can be made in Unity using uLipSync by following their [Calibration instructions](https://github.com/hecomi/uLipSync#calibration).
 
+## Using binary profiles
+By default the profiles are stored in JSON format. While these files tend to compress nicely, a more compact binary representation is also supported by **wLipSync**. This format not only packs the data, it also stores precomputed values which would otherwise be computed at runtime when loading a profile.
+
+To convert a JSON profile into a binary profile, the `json2bin` utility in the [`tools/`](https://github.com/mrxz/wLipSync/tree/main/tools) directory can be used. This script is also included in the published NPM package, meaning you can run it from your project using the following command:
+```sh
+node ./node_modules/wlipsync/tools/json2bin.js path/to/profile.js profile.bin
+```
+
+To load a binary profile, the following change needs to be made to the code sample above:
+```diff
+// Import wLipSync
+-import { createWLipSyncNode } from 'wlipsync';
++import { createWLipSyncNode, parseBinaryProfile } from 'wlipsync';
+
+// ...
+
+// Load wLipSync profile
+-const profile = await fetch('./profile.json').then(resp => resp.json());
++const binaryProfile = await fetch('./profile.bin').then(resp => resp.arrayBuffer());
++const profile = parseBinaryProfile(binaryProfile);
+
+// Create lip sync node
+const lipsyncNode = await createWLipSyncNode(audioContext, profile);
+```
+
 # Building
 The project consists of a C part compiled to WASM and corresponding TypeScript code. Everything can be compiled by running `bun run build` as this will execute all relevant commands in the right order. The following tools are expected to be present on the system:
 
