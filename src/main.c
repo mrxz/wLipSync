@@ -129,21 +129,21 @@ int execute(int inputBufferIndex) {
   volume = rms_volume(buffer, buffer_size);
 
   // LowPassFilter(ref buffer, outputSampleRate, cutoff, range);
-  low_pass_filter(buffer, buffer_size, outputSampleRate, cutoff, range);
-
   // DownSample(buffer, out var data, outputSampleRate, targetSampleRate);
   float data[buffer_size];
   int data_size = buffer_size;
   if(outputSampleRate <= targetSampleRate) {
-    // FIXME: More efficient buffer copy?
+    low_pass_filter(buffer, buffer_size, outputSampleRate, cutoff, range, 1);
     down_sample_exact(buffer, data, data_size, 1);
   } else if(outputSampleRate % targetSampleRate == 0) {
     int skip = outputSampleRate / targetSampleRate;
     data_size = buffer_size / skip;
+    low_pass_filter(buffer, buffer_size, outputSampleRate, cutoff, range, skip);
     down_sample_exact(buffer, data, data_size, skip);
   } else {
     float df = (float)outputSampleRate / targetSampleRate;
     data_size = (int)PT_round(buffer_size / df);
+    low_pass_filter(buffer, buffer_size, outputSampleRate, cutoff, range, 1);
     down_sample(buffer, buffer_size, data, data_size, df);
   }
 

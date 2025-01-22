@@ -1,5 +1,5 @@
 void copy_ring_buffer(float* outputBuffer, float* inputBuffer, unsigned long startIndex, unsigned long inputBufferSize, unsigned long outputBufferSize);
-void low_pass_filter(float* data, unsigned long size, float sampleRate, float cutoff, float range);
+void low_pass_filter(float* data, unsigned long size, float sampleRate, float cutoff, float range, int skip);
 void down_sample_exact(float* input, float* output, unsigned long output_size, int skip);
 void down_sample(float* input, unsigned long size, float* output, unsigned long output_size, float df);
 void pre_emphasis(float* data, int len, float p);
