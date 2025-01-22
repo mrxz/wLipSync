@@ -128,4 +128,4 @@ const profilePtrsView = new DataView(memory.buffer, profilePtrs, 3 * 4);
 }
 
 // Output
-writeFileSync(args[1], buffer.slice(0, offset));
+writeFileSync(args[1], new DataView(buffer, 0, offset));
