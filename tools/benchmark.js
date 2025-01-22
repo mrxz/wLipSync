@@ -21,7 +21,7 @@ const mfccPtr = exports.load_profile(
 );
 
 const mfccs = profile.mfccs;
-const mfccData = new DataView(memory.buffer, mfccPtr, profile.mfccNum * profile.mfccDataCount * 12 * 4);
+const mfccData = new DataView(memory.buffer, mfccPtr, profile.mfccs.length * profile.mfccDataCount * 12 * 4);
 
 let index = 0;
 for(const phoneme of mfccs) {
