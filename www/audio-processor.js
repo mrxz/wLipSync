@@ -23,12 +23,13 @@ class Processor extends AudioWorkletProcessor {
         WebAssembly.instantiate(wasmModule, importObject).then(instance => {
             const exports = this.exports = instance.exports;
 
+            const phonemeCount = profile.mfccs.length;
             const mfccPtr = exports.load_profile(
                 profile.targetSampleRate,
                 profile.sampleCount,
                 profile.melFilterBankChannels,
                 profile.compareMethod,
-                profile.mfccNum,
+                phonemeCount,
                 profile.mfccDataCount,
                 profile.useStandardization ? 1 : 0
             );
@@ -36,7 +37,7 @@ class Processor extends AudioWorkletProcessor {
             const mfccs = this.mfccs = profile.mfccs;
             if(!profile.means) {
                 // Upload raw mfcc calibration data and precompute profile
-                const mfccData = new DataView(memory.buffer, mfccPtr, profile.mfccNum * profile.mfccDataCount * 12 * 4);
+                const mfccData = new DataView(memory.buffer, mfccPtr, phonemeCount * profile.mfccDataCount * 12 * 4);
                 let index = 0;
                 for (const phoneme of mfccs) {
                     for (const sampleList of phoneme.mfccCalibrationDataList) {
@@ -51,8 +52,8 @@ class Processor extends AudioWorkletProcessor {
                 // Profile has already been precomputed, upload values directly
                 const profilePtrs = exports.get_profile_ptrs();
                 const profilePtrsView = new DataView(memory.buffer, profilePtrs, 3 * 4);
-                const mfccsView = new DataView(memory.buffer, profilePtrsView.getInt32(0, true), profile.mfccNum * 12 * 4);
-                for (let phoneme = 0; phoneme < mfccs.length; phoneme++) {
+                const mfccsView = new DataView(memory.buffer, profilePtrsView.getInt32(0, true), phonemeCount * 12 * 4);
+                for (let phoneme = 0; phoneme < phonemeCount; phoneme++) {
                     for (let i = 0; i < 12; i++) {
                         mfccsView.setFloat32((phoneme * 12 + i) * 4, mfccs[phoneme].values[i], true);
                     }
@@ -95,7 +96,6 @@ class Processor extends AudioWorkletProcessor {
         for(let i = 0; i < monoInput.length; i++) {
             this.inputBuffer.setFloat32(this.inputBufferIndex * 4, monoInput[i], true);
             this.inputBufferIndex = (this.inputBufferIndex + 1) % this.inputBufferSize;
-
         }
 
         if((this.inputBufferIndex + this.inputBufferSize - this.lastIndex) % this.inputBufferSize === parameters.blockSize[0]) {

@@ -40,18 +40,18 @@ export function parseBinaryProfile(buffer: ArrayBuffer): Profile {
         sampleCount: readInt(),
         melFilterBankChannels: readUint8(),
         compareMethod: readUint8() as 0|1|2,
-        mfccNum: readUint8(),
+        mfccNum: 12,
+        mfccs: [...new Array(readUint8())], // phonemeCount
         mfccDataCount: readUint8(),
         useStandardization: readUint8() === 1,
-        mfccs: []
     };
     // Read phoneme data
     for(let phoneme = 0; phoneme < profile.mfccNum; phoneme++) {
-        profile.mfccs.push({
+        profile.mfccs[phoneme] = {
             name: '',
             mfccCalibrationDataList: [],
             values: readFloats(12)
-        });
+        };
     }
     profile.means = readFloats(12);
     profile.stdDevs = readFloats(12);

@@ -64,7 +64,7 @@ writeInt(profile.targetSampleRate);
 writeInt(profile.sampleCount);
 writeUint8(profile.melFilterBankChannels);
 writeUint8(profile.compareMethod);
-writeUint8(profile.mfccNum);
+writeUint8(profile.mfccs.length);
 writeUint8(profile.mfccDataCount);
 writeUint8(profile.useStandardization ? 1 : 0);
 
@@ -74,11 +74,11 @@ const mfccPtr = exports.load_profile(
     profile.sampleCount,
     profile.melFilterBankChannels,
     profile.compareMethod,
-    profile.mfccNum,
+    profile.mfccs.length,
     profile.mfccDataCount,
     profile.useStandardization ? 1 : 0
 );
-const mfccData = new DataView(memory.buffer, mfccPtr, profile.mfccNum * profile.mfccDataCount * MFCC_NUM * 4);
+const mfccData = new DataView(memory.buffer, mfccPtr, profile.mfccs.length * profile.mfccDataCount * MFCC_NUM * 4);
 let index = 0;
 for (const phoneme of profile.mfccs) {
     for (const sampleList of phoneme.mfccCalibrationDataList) {
@@ -95,8 +95,8 @@ const profilePtrsView = new DataView(memory.buffer, profilePtrs, 3 * 4);
 
 // Averages
 {
-    const view = new DataView(memory.buffer, profilePtrsView.getInt32(0, true), profile.mfccNum * MFCC_NUM * 4);
-    for(let phoneme = 0; phoneme < profile.mfccNum; phoneme++) {
+    const view = new DataView(memory.buffer, profilePtrsView.getInt32(0, true), profile.mfccs.length * MFCC_NUM * 4);
+    for(let phoneme = 0; phoneme < profile.mfccs.length; phoneme++) {
         for(let i = 0; i < MFCC_NUM; i++) {
             writeFloat(view.getFloat32((phoneme * MFCC_NUM + i) * 4, true));
         }
@@ -121,11 +121,11 @@ const profilePtrsView = new DataView(memory.buffer, profilePtrs, 3 * 4);
 
 // Names
 {
-    for(let phoneme = 0; phoneme < profile.mfccNum; phoneme++) {
+    for(let phoneme = 0; phoneme < profile.mfccs.length; phoneme++) {
         const name = profile.mfccs[phoneme].name;
         writeString(name);
     }
 }
 
 // Output
-writeFileSync(args[1], new DataView(buffer, 0, offset));
+writeFileSync(args[1], new Uint8Array(buffer, 0, offset));
