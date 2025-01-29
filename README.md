@@ -59,7 +59,7 @@ By default the profiles are stored in JSON format. While these files tend to com
 
 To convert a JSON profile into a binary profile, the `json2bin` utility in the [`tools/`](https://github.com/mrxz/wLipSync/tree/main/tools) directory can be used. This script is also included in the published NPM package, meaning you can run it from your project using the following command:
 ```sh
-node ./node_modules/wlipsync/tools/json2bin.js path/to/profile.js profile.bin
+node ./node_modules/wlipsync/tools/json2bin.js path/to/profile.json profile.bin
 ```
 
 To load a binary profile, the following change needs to be made to the code sample above:
