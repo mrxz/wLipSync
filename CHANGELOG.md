@@ -1,3 +1,6 @@
+# 1.1.2
+* Fixed types folder mismatch, which prevented type information from being available
+
 # 1.1.1
 * Fixed a bug where profiles with >12 phonemes would produce incorrect results
 
