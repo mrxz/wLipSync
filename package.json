@@ -6,7 +6,7 @@
   "license": "MIT",
   "module": "dist/wlipsync.js",
   "main": "dist/wlipsync.js",
-  "types": "dist/typings/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "type": "module",
   "scripts": {
     "build": "bun run build:wasm && bun run build:www-audio-processor && bun run build:www && bun run build:www-single && bun run build:minify && bun run build:types",

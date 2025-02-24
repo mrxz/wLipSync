@@ -8,8 +8,8 @@
 
 A MFCC-based lip sync library for WebAudio using WASM. This is a port of the [uLipSync](https://github.com/hecomi/uLipSync) project.
 
-<img alt="A-Painter" target="_blank" src="https://github.com/user-attachments/assets/e1df1cef-0e53-4651-88af-e771be454530" width="40%">
-<img alt="A-Painter" target="_blank" src="https://github.com/user-attachments/assets/f615d53b-0e71-497c-8c22-f3f8b7dae19b" width="40%">
+<img target="_blank" src="https://github.com/user-attachments/assets/e1df1cef-0e53-4651-88af-e771be454530" width="40%">
+<img target="_blank" src="https://github.com/user-attachments/assets/f615d53b-0e71-497c-8c22-f3f8b7dae19b" width="40%">
 
 # Usage
 Either install the package from [npm](https://www.npmjs.com/package/wlipsync) or load it using import maps:
