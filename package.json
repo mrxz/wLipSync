@@ -20,6 +20,14 @@
     "benchmark": "bun run tools/benchmark.js",
     "json2bin": "bun run tools/json2bin.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrxz/wlipsync"
+  },
+  "bugs": {
+    "url": "https://github.com/mrxz/wlipsync/issues"
+  },
+  "homepage": "https://github.com/mrxz/wlipsync",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
