@@ -1,3 +1,6 @@
+# 1.2.0
+* Improved performance, processing is now ~**77%** faster
+
 # 1.1.2
 * Fixed types folder mismatch, which prevented type information from being available
 
