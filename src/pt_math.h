@@ -89,16 +89,15 @@ static __forceinline float PT_round_uncheckedf(float x) {
 }
 #pragma float_control(pop)
 #elif defined(__GNUC__)
-static double PT_round_unchecked(double x)
-    __attribute__((__optimize__("no-associative-math")))
-    __attribute__((always_inline)) {
+
+static inline double PT_round_unchecked(double x) {
+    #pragma clang fp reassociate(off)
     x += 6755399441055744.0;
     x -= 6755399441055744.0;
     return x;
 }
-static float PT_round_uncheckedf(float x)
-    __attribute__((__optimize__("no-associative-math")))
-    __attribute__((always_inline)) {
+static inline float PT_round_uncheckedf(float x) {
+    #pragma clang fp reassociate(off)
     x += 12582912.0f;
     x -= 12582912.0f;
     return x;
