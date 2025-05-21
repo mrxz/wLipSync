@@ -46,7 +46,7 @@ export function parseBinaryProfile(buffer: ArrayBuffer): Profile {
         useStandardization: readUint8() === 1,
     };
     // Read phoneme data
-    for(let phoneme = 0; phoneme < profile.mfccNum; phoneme++) {
+    for(let phoneme = 0; phoneme < profile.mfccs.length; phoneme++) {
         profile.mfccs[phoneme] = {
             name: '',
             mfccCalibrationDataList: [],
@@ -55,10 +55,9 @@ export function parseBinaryProfile(buffer: ArrayBuffer): Profile {
     }
     profile.means = readFloats(12);
     profile.stdDevs = readFloats(12);
-    for(let phoneme = 0; phoneme < profile.mfccNum; phoneme++) {
+    for(let phoneme = 0; phoneme < profile.mfccs.length; phoneme++) {
         profile.mfccs[phoneme].name = readString();
     }
-    console.log(profile);
 
     return profile;
 }
