@@ -12,7 +12,7 @@ const light = new THREE.DirectionalLight('white', 2.5);
 light.position.set(2, 4, 3);
 scene.add(light);
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 document.body.appendChild(renderer.domElement);
 
 const resize = () => {
