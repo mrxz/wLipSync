@@ -15,7 +15,7 @@ void calc_cosine_similarity_scores(float *mfcc, float *profileMfcc,
     scores[phoneme] = 0;
     for(int i = 0; i < MFCC_NUM; i++) {
       float x = (mfcc[i] - means[i]) / standardDeviations[i];
-      float y = (profileMfcc[phoneme * MFCC_NUM + i]) / standardDeviations[i];
+      float y = (profileMfcc[phoneme * MFCC_NUM + i] - means[i]) / standardDeviations[i];
       mfccNorm += x * x;
       phonemeNorm += y * y;
       prod += x * y;
