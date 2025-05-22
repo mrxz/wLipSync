@@ -1,4 +1,5 @@
 #include "../constants.h"
+#define PT_MATH_PRECISE_POW
 #include "../pt_math.h"
 
 void calc_l2norm_scores(float *mfcc, float *profileMfcc, float *means,
@@ -11,7 +12,7 @@ void calc_l2norm_scores(float *mfcc, float *profileMfcc, float *means,
       float y = (profileMfcc[phoneme * MFCC_NUM + i] - means[i]) / standardDeviations[i];
       scores[phoneme] += PT_powf(x - y, 2.f);
     }
-    scores[phoneme] /= MFCC_NUM;
+    scores[phoneme] = PT_sqrtf(scores[phoneme] / MFCC_NUM);
     scores[phoneme] = PT_powf(10.f, -scores[phoneme]);
   }
 }

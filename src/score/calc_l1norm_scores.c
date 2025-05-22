@@ -1,4 +1,5 @@
 #include "../constants.h"
+#define PT_MATH_PRECISE_POW
 #include "../pt_math.h"
 
 void calc_l1norm_scores(float *mfcc, float *profileMfcc, float *means,
