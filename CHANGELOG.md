@@ -1,3 +1,8 @@
+# 1.2.1
+* Fixed a bug in score calculations for profiles with `useStandardization` enabled
+* Fixed L2-norm score calculation to match `uLipSync` behaviour (#4)
+* Fixed a bug in parsing binary profile files with >12 phonemes
+
 # 1.2.0
 * Improved performance, processing is now ~**77%** faster
 
