@@ -39,9 +39,9 @@ class Processor extends AudioWorkletProcessor {
                 // Upload raw mfcc calibration data and precompute profile
                 const mfccData = new DataView(memory.buffer, mfccPtr, phonemeCount * profile.mfccDataCount * 12 * 4);
                 let index = 0;
-                for (const phoneme of mfccs) {
-                    for (const sampleList of phoneme.mfccCalibrationDataList) {
-                        for (const sample of sampleList.array) {
+                for(const phoneme of mfccs) {
+                    for(const sampleList of phoneme.mfccCalibrationDataList) {
+                        for(const sample of sampleList.array) {
                             mfccData.setFloat32(index, sample, true);
                             index += 4;
                         }
@@ -53,14 +53,14 @@ class Processor extends AudioWorkletProcessor {
                 const profilePtrs = exports.get_profile_ptrs();
                 const profilePtrsView = new DataView(memory.buffer, profilePtrs, 3 * 4);
                 const mfccsView = new DataView(memory.buffer, profilePtrsView.getInt32(0, true), phonemeCount * 12 * 4);
-                for (let phoneme = 0; phoneme < phonemeCount; phoneme++) {
-                    for (let i = 0; i < 12; i++) {
+                for(let phoneme = 0; phoneme < phonemeCount; phoneme++) {
+                    for(let i = 0; i < 12; i++) {
                         mfccsView.setFloat32((phoneme * 12 + i) * 4, mfccs[phoneme].values[i], true);
                     }
                 }
                 const meansView = new DataView(memory.buffer, profilePtrsView.getInt32(4, true), 12 * 4);
                 const stdDevsView = new DataView(memory.buffer, profilePtrsView.getInt32(8, true), 12 * 4);
-                for (let i = 0; i < 12; i++) {
+                for(let i = 0; i < 12; i++) {
                     meansView.setFloat32(i * 4, profile.means[i], true);
                     stdDevsView.setFloat32(i * 4, profile.stdDevs[i], true);
                 }
@@ -83,7 +83,7 @@ class Processor extends AudioWorkletProcessor {
 
     process(input, output, parameters) {
         const monoInput = input[0][0];
-        if (!monoInput) {
+        if(!monoInput) {
             return true;
         }
 

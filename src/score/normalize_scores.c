@@ -1,4 +1,4 @@
-void normalize_scores(float *scores, unsigned int mfccCount) {
+void normalize_scores(float* scores, unsigned int mfccCount) {
   float sum = 0.f;
 
   for(int i = 0; i < mfccCount; i++) {

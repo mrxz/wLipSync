@@ -1,6 +1,6 @@
 #include "../math.h"
 
-void copy_ring_buffer(float *outputBuffer, float *inputBuffer,
+void copy_ring_buffer(float* outputBuffer, float* inputBuffer,
                       unsigned long startIndex, unsigned long inputBufferSize,
                       unsigned long outputBufferSize) {
   startIndex %= inputBufferSize;

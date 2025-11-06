@@ -2,8 +2,8 @@
 #define PT_MATH_PRECISE_POW
 #include "../pt_math.h"
 
-void calc_l2norm_scores(float *mfcc, float *profileMfcc, float *means,
-                        float *standardDeviations, float *scores,
+void calc_l2norm_scores(float* mfcc, float* profileMfcc, float* means,
+                        float* standardDeviations, float* scores,
                         unsigned int mfccCount) {
   for(int phoneme = 0; phoneme < mfccCount; phoneme++) {
     scores[phoneme] = 0;

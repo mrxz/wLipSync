@@ -1,7 +1,7 @@
 #include "../pt_math.h"
 
-void fft_impl(float *spectrumRe, float *spectrumIm, unsigned long size) {
-  if (size < 2) {
+void fft_impl(float* spectrumRe, float* spectrumIm, unsigned long size) {
+  if(size < 2) {
     return;
   }
 
@@ -39,7 +39,7 @@ void fft_impl(float *spectrumRe, float *spectrumIm, unsigned long size) {
   }
 }
 
-void fft(float *data, float *spectrum, unsigned long size) {
+void fft(float* data, float* spectrum, unsigned long size) {
   float spectrumRe[size];
   float spectrumIm[size];
 

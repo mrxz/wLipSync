@@ -80,9 +80,9 @@ const mfccPtr = exports.load_profile(
 );
 const mfccData = new DataView(memory.buffer, mfccPtr, profile.mfccs.length * profile.mfccDataCount * MFCC_NUM * 4);
 let index = 0;
-for (const phoneme of profile.mfccs) {
-    for (const sampleList of phoneme.mfccCalibrationDataList) {
-        for (const sample of sampleList.array) {
+for(const phoneme of profile.mfccs) {
+    for(const sampleList of phoneme.mfccCalibrationDataList) {
+        for(const sample of sampleList.array) {
             mfccData.setFloat32(index, sample, true);
             index += 4;
         }

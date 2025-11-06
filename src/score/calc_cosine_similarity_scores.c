@@ -3,9 +3,9 @@
 #define PT_MATH_PRECISE_POW
 #include "../pt_math.h"
 
-void calc_cosine_similarity_scores(float *mfcc, float *profileMfcc,
-                                   float *means, float *standardDeviations,
-                                   float *scores, unsigned int mfccCount) {
+void calc_cosine_similarity_scores(float* mfcc, float* profileMfcc,
+                                   float* means, float* standardDeviations,
+                                   float* scores, unsigned int mfccCount) {
   for(int phoneme = 0; phoneme < mfccCount; phoneme++) {
     float mfccNorm = 0.f;
     float phonemeNorm = 0.f;
