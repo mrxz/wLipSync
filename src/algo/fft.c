@@ -1,53 +1,51 @@
 #include "../pt_math.h"
 
-void fft_impl(float* spectrumRe, float* spectrumIm, unsigned long size) {
-  if(size < 2) {
-    return;
-  }
-
-  float evenRe[size / 2];
-  float evenIm[size / 2];
-  float oddRe[size / 2];
-  float oddIm[size / 2];
-
-  for(int i = 0; i < size / 2; ++i) {
-    evenRe[i] = spectrumRe[i * 2];
-    evenIm[i] = spectrumIm[i * 2];
-    oddRe[i] = spectrumRe[i * 2 + 1];
-    oddIm[i] = spectrumIm[i * 2 + 1];
-  }
-
-  fft_impl(evenRe, evenIm, size / 2);
-  fft_impl(oddRe, oddIm, size / 2);
-
-  for(int i = 0; i < size / 2; ++i) {
-    float er = evenRe[i];
-    float ei = evenIm[i];
-    float or = oddRe[i];
-    float oi = oddIm[i];
-    float theta = -2.f * PT_PI * i / size;
-
-    float cx = PT_cosf(theta);
-    float cy = PT_sinf(theta);
-    float cx2 = cx * or - cy * oi;
-    float cy2 = cx * oi + cy * or;
-
-    spectrumRe[i] = er + cx2;
-    spectrumIm[i] = ei + cy2;
-    spectrumRe[size / 2 + i] = er - cx2;
-    spectrumIm[size / 2 + i] = ei - cy2;
-  }
-}
-
 void fft(float* data, float* spectrum, unsigned long size) {
   float spectrumRe[size];
   float spectrumIm[size];
 
+  // Bit reverse
+  unsigned int bits = 31 - __builtin_clzl(size);
   for(int i = 0; i < size; ++i) {
-    spectrumRe[i] = data[i];
+    int reversed = 0;
+    for(int j = 0; j < bits; ++j) {
+      reversed = (reversed << 1) | (i >> j & 1);
+    }
+
+    spectrumRe[i] = data[reversed];
     spectrumIm[i] = 0.f;
   }
-  fft_impl(spectrumRe, spectrumIm, size);
+
+  // Compute twiddle factors
+  float cx[size/2];
+  float cy[size/2];
+  for(int j = 0; j < size/2; ++j) {
+    float theta = -2.f * PT_PI * j / size;
+    cx[j] = PT_cosf(theta);
+    cy[j] = PT_sinf(theta);
+  }
+
+  // Perform FFT
+  for(int halfSize = 1; halfSize < size; halfSize <<= 1) {
+    int stride = size / (halfSize * 2);
+    for(int i = 0; i < size; i += 2 * halfSize) {
+      for(int j = 0; j < halfSize; ++j) {
+        float er = spectrumRe[i + j];
+        float ei = spectrumIm[i + j];
+        float or = spectrumRe[i + j + halfSize];
+        float oi = spectrumIm[i + j + halfSize];
+
+        int ti = j * stride;
+        float cx2 = cx[ti] * or - cy[ti] * oi;
+        float cy2 = cx[ti] * oi + cy[ti] * or;
+
+        spectrumRe[i + j] = er + cx2;
+        spectrumIm[i + j] = ei + cy2;
+        spectrumRe[i + j + halfSize] = er - cx2;
+        spectrumIm[i + j + halfSize] = ei - cy2;
+      }
+    }
+  }
 
   for(int i = 0; i < size; ++i) {
     float re = spectrumRe[i];
