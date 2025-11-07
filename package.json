@@ -14,7 +14,7 @@
     "build:www": "vite build",
     "build:www-audio-processor": "bun build --minify www/audio-processor.js --outfile www/public/audio-processor.js",
     "build:www-single": "vite build -c vite-single.config.js",
-    "build:minify": "terser dist/wlipsync.js --module -o dist/wlipsync.js && terser dist/wlipsync-single.js --module -o dist/wlipsync-single.js",
+    "build:minify": "terser dist/wlipsync.js --module -o dist/wlipsync.js && terser dist/wlipsync-single.js --mangle --module -o dist/wlipsync-single.js",
     "build:types": "tsc --emitDeclarationOnly --project tsconfig.types.json",
     "dev": "live-server --port=4000 --no-browser ./example --mount=/js:./dist",
     "benchmark": "bun run tools/benchmark.js",
