@@ -1,6 +1,6 @@
 {
   "name": "wlipsync",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "MFCC-based lip-sync library using WASM and WebAudio based on uLipSync",
   "author": "Noeri Huisman",
   "license": "MIT",
@@ -47,6 +47,7 @@
   ],
   "files": [
     "dist",
+    "CHANGELOG.md",
     "tools/json2bin.js"
   ],
   "devDependencies": {

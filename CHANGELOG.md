@@ -1,3 +1,8 @@
+# 1.3.0
+* Fixed a bug where NaN values would break reported volume (#6)
+* Improved performance by using radix-2 algorithm for FFT
+* Reduced bundle size by enabling mangling
+
 # 1.2.1
 * Fixed a bug in score calculations for profiles with `useStandardization` enabled
 * Fixed L2-norm score calculation to match `uLipSync` behaviour (#4)
