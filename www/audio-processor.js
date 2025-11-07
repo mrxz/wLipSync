@@ -9,6 +9,7 @@ class Processor extends AudioWorkletProcessor {
     inputBufferIndex = -1;
     inputBufferPtr = -1;
     inputBufferSize = -1;
+    /** @type {Float32Array|null} */
     inputBuffer = null;
     lastIndex = 0;
     volumePtr = -1;
@@ -69,7 +70,7 @@ class Processor extends AudioWorkletProcessor {
 
             this.inputBufferPtr = exports.get_input_buffer();
             this.inputBufferSize = exports.get_input_buffer_size();
-            this.inputBuffer = new DataView(memory.buffer, this.inputBufferPtr, this.inputBufferSize * 4);
+            this.inputBuffer = new Float32Array(memory.buffer, this.inputBufferPtr, this.inputBufferSize);
             this.inputBufferIndex = 0;
             this.lastIndex = 0;
             this.volumePtr = exports.get_volume_ptr();
@@ -94,7 +95,7 @@ class Processor extends AudioWorkletProcessor {
 
         // Process quantum
         for(let i = 0; i < monoInput.length; i++) {
-            this.inputBuffer.setFloat32(this.inputBufferIndex * 4, monoInput[i], true);
+            this.inputBuffer[this.inputBufferIndex] = monoInput[i];
             this.inputBufferIndex = (this.inputBufferIndex + 1) % this.inputBufferSize;
         }
 
