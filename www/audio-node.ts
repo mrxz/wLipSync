@@ -29,7 +29,8 @@ export class WLipSyncAudioNode extends AudioWorkletNode {
         const deltaTime = event.data.timestamp - this.lastTimestamp;
         this.lastTimestamp = event.data.timestamp;
 
-        const rawVolume = event.data.volume;
+        // Treat NaN values as 0.0 volume, these can occur when input contains NaN values.
+        const rawVolume = Number.isNaN(event.data.volume) ? 0.0 : event.data.volume;
         let normVolume = Math.log10(rawVolume);
         normVolume = (normVolume - this.minVolume) / (this.maxVolume - this.minVolume);
         normVolume = Math.max(Math.min(normVolume, 1), 0);
