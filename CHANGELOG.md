@@ -1,3 +1,7 @@
+# 1.3.1
+* Removed memory allocations during smooth damping
+* Added JSDoc to public methods and types
+
 # 1.3.0
 * Fixed a bug where NaN values would break reported volume (#6)
 * Improved performance by using radix-2 algorithm for FFT

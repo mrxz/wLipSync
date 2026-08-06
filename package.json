@@ -1,6 +1,6 @@
 {
   "name": "wlipsync",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "MFCC-based lip-sync library using WASM and WebAudio based on uLipSync",
   "author": "Noeri Huisman",
   "license": "MIT",
@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mrxz/wlipsync"
+    "url": "git+https://github.com/mrxz/wlipsync.git"
   },
   "bugs": {
     "url": "https://github.com/mrxz/wlipsync/issues"
