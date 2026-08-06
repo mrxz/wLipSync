@@ -2,6 +2,12 @@ import type { Profile } from "./types";
 
 const textDecoder = new TextDecoder();
 
+/**
+ * Parses a binary lipsync profile from a given ArrayBuffer.
+ *
+ * @param buffer The ArrayBuffer containing the binary lipsync profile
+ * @returns {Profile}
+ */
 export function parseBinaryProfile(buffer: ArrayBuffer): Profile {
     const data = new DataView(buffer);
     let offset = 0;

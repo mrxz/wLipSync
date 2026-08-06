@@ -3,17 +3,58 @@ import { smoothDamp } from "./utils";
 
 export let configuration: { wasmModule: WebAssembly.Module|undefined } = { wasmModule: undefined };
 
+/**
+ * The AudioNode that performs the lip sync logic. The volume and viseme weights
+ * can be read through the `volume` and `weights` properties.
+ *
+ * NOTE: This node itself does not generate any output. For simultaneous
+ * lipsync processing and audio playback, connect the source node to this node
+ * _and_ to the desired sink node(s).
+ */
 export class WLipSyncAudioNode extends AudioWorkletNode {
     private openCloseVelocity = 0;
     private lastTimestamp = 0;
     private weightVelocities: Record<string, number> = {};
 
+    /**
+     * Configurable lower bound for the volume. Anything at or below this
+     * value will be treated as silence.
+     *
+     * NOTE: This is in log10(RMS)
+     * @default -2.5
+     */
     public minVolume = -2.5;
+    /**
+     * Configurable upper bound for the volume. Anything at or above this
+     * value won't result in increased volume or viseme weight scores.
+     *
+     * NOTE: This is in log10(RMS)
+     * @default -1.5
+     */
     public maxVolume = -1.5;
+    /**
+     * Smoothing term used to configure the smooth damping that is applied
+     * to both the output volume and viseme weights. Higher values result
+     * in smoother changes, whereas lower values result in quicker changes.
+     *
+     * @default 0.05
+     */
     public smoothness = 0.05;
 
+    /**
+     * The latest recorded volume in the range [0-1].
+     * Both bounds are determined by `minVolume` and `maxVolume`.
+     */
     public volume = 0;
-    public weights: Record<string, number> = {};
+    /**
+     * Latest recorded weights per viseme. The values are in the range [0-1]
+     * and smooth damping is applied over time, controlled by the `smoothness`
+     * property.
+     *
+     * NOTE: This is purely an output of the node, mutating this property has no
+     *       effect and will get overwritten during the next update.
+     */
+    public readonly weights: Record<string, number> = {};
 
     constructor(context: BaseAudioContext, profile: Profile, wasmModule: WebAssembly.Module | undefined = configuration.wasmModule) {
         super(context, 'wlipsync-processor', { processorOptions: { wasmModule: wasmModule, profile }});
