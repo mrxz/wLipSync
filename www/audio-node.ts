@@ -77,14 +77,16 @@ export class WLipSyncAudioNode extends AudioWorkletNode {
         normVolume = Math.max(Math.min(normVolume, 1), 0);
 
         // Update volume
-        [this.volume, this.openCloseVelocity] = smoothDamp(this.volume, normVolume, this.openCloseVelocity, this.smoothness, deltaTime);
+        const result = smoothDamp(this.volume, normVolume, this.openCloseVelocity, this.smoothness, deltaTime);
+        this.volume = result.value;
+        this.openCloseVelocity = result.velocity;
 
         // Update weights
         for(const key in this.weights) {
             const targetWeight = key === event.data.name ? 1 : 0;
-            let weightVel = this.weightVelocities[key];
-            [this.weights[key], weightVel] = smoothDamp(this.weights[key], targetWeight, weightVel, this.smoothness, deltaTime);
-            this.weightVelocities[key] = weightVel;
+            const result = smoothDamp(this.weights[key], targetWeight, this.weightVelocities[key], this.smoothness, deltaTime);
+            this.weights[key] = result.value;
+            this.weightVelocities[key] = result.velocity;
         }
     }
 
