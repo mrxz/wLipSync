@@ -9,7 +9,7 @@ export default defineConfig({
     target: 'esnext',
     minify: true,
     lib: {
-      entry: resolve(__dirname, 'www/index.ts'),
+      entry: resolve(import.meta.dirname, 'www/index.ts'),
       fileName: 'wlipsync',
       formats: ['es'],
     },

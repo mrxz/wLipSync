@@ -10,7 +10,7 @@ export default defineConfig({
     target: 'esnext',
     minify: 'terser',
     lib: {
-      entry: resolve(__dirname, 'www/index-single.ts'),
+      entry: resolve(import.meta.dirname, 'www/index-single.ts'),
       fileName: 'wlipsync-single',
       formats: ['es'],
     },
